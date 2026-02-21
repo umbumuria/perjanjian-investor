@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Perjanjian Mandat Trading</title>
+<style>
+
+body{
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  margin:0;
+  padding:20px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  color:#2c5364;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+label{
+  font-size:13px;
+  font-weight:600;
+}
+
+input, select{
+  width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button{
+  padding:10px 14px;
+  border:none;
+  border-radius:6px;
+  background:#2c5364;
+  color:white;
+  cursor:pointer;
+  margin-top:10px;
+}
+
+button:hover{
+  background:#203a43;
+}
+
+.preview{
+  margin-top:20px;
+  padding:20px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.signature-box{
+  margin-top:20px;
+}
+
+canvas{
+  border:1px solid #ccc;
+  width:100%;
+  height:100px;
+  border-radius:6px;
+}
+
+.footer{
+  text-align:center;
+  margin-top:10px;
+}
+
+@media print{
+  body{
+    background:white;
+    padding:0;
+  }
+  .container{
+    box-shadow:none;
+    border-radius:0;
+  }
+  button, input, select{
+    display:none;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>PERJANJIAN MANDAT EKSEKUSI TRADING</h2>
+
+<div class="form-grid">
+
+<div>
+<label>Tanggal Mulai</label>
+<input type="date" id="mulai" onchange="setAkhir()">
+</div>
+
+<div>
+<label>Tanggal Berakhir (+3 Bulan)</label>
+<input type="date" id="akhir" readonly>
+</div>
+
+<div>
+<label>Nama Investor</label>
+<input type="text" id="investor">
+</div>
+
+<div>
+<label>Nama Eksekutor</label>
+<input type="text" id="eksekutor">
+</div>
+
+<div>
+<label>Drawdown Maksimal (%)</label>
+<input type="number" id="dd" placeholder="Contoh: 50">
+</div>
+
+<div>
+<label>Skema Risiko</label>
+<select id="risk">
+<option value="pure">Pure Risk Eksekutor (Investor 10% Profit)</option>
+<option value="sharing">Risk & Profit Sharing 50:50</option>
+</select>
+</div>
+
+</div>
+
+<button onclick="generate()">Generate Perjanjian</button>
+
+<div class="preview" id="preview"></div>
+
+<div class="signature-box">
+<h4>Tanda Tangan Investor</h4>
+<canvas id="sign1"></canvas>
+<button onclick="clearCanvas('sign1')">Clear</button>
+
+<h4>Tanda Tangan Eksekutor</h4>
+<canvas id="sign2"></canvas>
+<button onclick="clearCanvas('sign2')">Clear</button>
+</div>
+
+<div class="footer">
+<button onclick="window.print()">Cetak / Save as PDF</button>
+</div>
+
+</div>
+
+<script>
+
+function setAkhir(){
+  let mulai = document.getElementById("mulai").value;
+  if(mulai){
+    let date = new Date(mulai);
+    date.setMonth(date.getMonth()+3);
+    document.getElementById("akhir").value = date.toISOString().split('T')[0];
+  }
+}
+
+function generate(){
+  let riskText = document.getElementById("risk").value === "pure"
+    ? "Seluruh kerugian menjadi tanggung jawab Eksekutor. Investor memperoleh 10% dari profit bersih."
+    : "Kerugian dibagi dua antara kedua pihak. Profit bersih dibagi 50% : 50%.";
+
+  document.getElementById("preview").innerHTML = `
+  <b>Tanggal Mulai:</b> ${mulai.value}<br>
+  <b>Tanggal Berakhir:</b> ${akhir.value}<br><br>
+
+  <b>PIHAK PERTAMA (Investor):</b> ${investor.value}<br>
+  <b>PIHAK KEDUA (Eksekutor):</b> ${eksekutor.value}<br><br>
+
+  <b>DANA:</b> Investor menyediakan 20.000 cent (± $200). 
+  Eksekutor hanya memiliki hak eksekusi tanpa withdrawal.<br><br>
+
+  <b>SISTEM:</b> Maksimal 3 transaksi per hari. 
+  Maksimal loss harian 5%.<br><br>
+
+  <b>SKEMA RISIKO:</b> ${riskText}<br><br>
+
+  <b>FORCE CLOSE:</b> Jika drawdown mencapai ${dd.value}%, 
+  seluruh posisi ditutup dan kerja sama dihentikan.
+  `;
+}
+
+/* signature */
+function initCanvas(id){
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext("2d");
+  let drawing=false;
+  canvas.width=canvas.offsetWidth;
+  canvas.height=canvas.offsetHeight;
+
+  canvas.addEventListener("mousedown",()=>drawing=true);
+  canvas.addEventListener("mouseup",()=>{drawing=false;ctx.beginPath();});
+  canvas.addEventListener("mousemove",(e)=>{
+    if(!drawing) return;
+    ctx.lineWidth=2;
+    ctx.lineCap="round";
+    ctx.lineTo(e.offsetX,e.offsetY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX,e.offsetY);
+  });
+}
+
+function clearCanvas(id){
+  const c=document.getElementById(id);
+  c.getContext("2d").clearRect(0,0,c.width,c.height);
+}
+
+initCanvas("sign1");
+initCanvas("sign2");
+
+</script>
+
+</body>
+</html>
