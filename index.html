@@ -79,13 +79,21 @@ button:hover{
 }
 
 .signature-box{
-  margin-top:20px;
+  margin-top:25px;
+  display:flex;
+  justify-content:space-between;
+  gap:40px;
+}
+
+.signature-item{
+  flex:1;
+  text-align:center;
 }
 
 canvas{
   border:1px solid #ccc;
   width:100%;
-  height:100px;
+  height:90px;
   border-radius:6px;
 }
 
@@ -118,7 +126,6 @@ canvas{
   label,
   input,
   select,
-  h4,
   .footer{
     display:none !important;
   }
@@ -127,8 +134,6 @@ canvas{
     border:none;
     margin:0;
     padding:0;
-    font-size:13px;
-    line-height:1.5;
   }
 
   canvas{
@@ -188,13 +193,19 @@ canvas{
 <div class="preview" id="preview"></div>
 
 <div class="signature-box">
-<h4>Tanda Tangan Investor</h4>
+
+<div class="signature-item">
+<p><strong>Tanda Tangan Investor</strong></p>
 <canvas id="sign1"></canvas>
 <button onclick="clearCanvas('sign1')">Clear</button>
+</div>
 
-<h4>Tanda Tangan Eksekutor</h4>
+<div class="signature-item">
+<p><strong>Tanda Tangan Eksekutor</strong></p>
 <canvas id="sign2"></canvas>
 <button onclick="clearCanvas('sign2')">Clear</button>
+</div>
+
 </div>
 
 <div class="footer">
