@@ -72,8 +72,10 @@ button:hover{
   padding:20px;
   border:1px solid #ddd;
   border-radius:8px;
-  font-size:14px;
-  line-height:1.6;
+  font-size:13px;
+  line-height:1.5;
+  max-height:600px;
+  overflow:hidden;
 }
 
 .signature-box{
@@ -83,7 +85,7 @@ button:hover{
 canvas{
   border:1px solid #ccc;
   width:100%;
-  height:120px;
+  height:100px;
   border-radius:6px;
 }
 
@@ -92,18 +94,47 @@ canvas{
   margin-top:15px;
 }
 
+/* ===== PRINT FIX 1 HALAMAN A4 ===== */
 @media print{
+
+  @page{
+    size:A4;
+    margin:12mm;
+  }
+
   body{
     background:white;
     padding:0;
   }
+
   .container{
     box-shadow:none;
     border-radius:0;
+    padding:0;
   }
-  button, input, select{
-    display:none;
+
+  .form-grid,
+  button,
+  label,
+  input,
+  select,
+  h4,
+  .footer{
+    display:none !important;
   }
+
+  .preview{
+    border:none;
+    margin:0;
+    padding:0;
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  canvas{
+    height:80px;
+  }
+
 }
 
 </style>
@@ -220,7 +251,6 @@ function initCanvas(id){
   ctx.lineCap = "round";
 
   let drawing = false;
-
   canvas.style.touchAction = "none";
 
   canvas.addEventListener("pointerdown", (e)=>{
