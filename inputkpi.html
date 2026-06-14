@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI Dashboard Monitoring</title>
+
+    <style>
+        :root { --primary: #2e7d32; --bg-light: #f8fafc; --card-bg: #ffffff; --text-main: #1e293b; --border: #e2e8f0; --danger: #dc2626; --accent: #1565c0; --warning: #f59e0b; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg-light); color: var(--text-main); padding: 20px; }
+        .section-title { font-size: 16px; font-weight: bold; margin: 20px 0 15px; border-left: 4px solid var(--primary); padding-left: 12px; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); text-transform: uppercase;}
+
+        .excel-container { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow-x: auto; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-height: 600px; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 11px; min-width: 3500px; }
+
+        thead th { position: sticky; top: 0; background: #f1f5f9; z-index: 10; text-align: center; vertical-align: middle; }
+        thead tr:nth-child(2) th { top: 38px; z-index: 9; } /* Sticky for second row of headers */
+
+        th { padding: 10px; border-bottom: 2px solid var(--border); border-right: 1px solid var(--border); color: #64748b; font-weight: 600; white-space: nowrap; }
+        td { padding: 8px 10px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); vertical-align: middle; white-space: nowrap; }
+
+        .cell-input { width: 100%; border: 1px solid var(--border); background: #fff; color: var(--text-main); padding: 8px; outline: none; box-sizing: border-box; font-size: 12px; border-radius: 4px; }
+        .btn-action { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-add { background: var(--accent); margin-bottom: 10px; font-size: 12px; padding: 8px 15px; }
+        
+        tbody tr:hover { background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+
+    <div class="section-title">
+        <span>DATABASE MONITORING KPI</span>
+        <div>
+            <button class="btn-action btn-add" style="background:#0ea5e9; margin:0; margin-right:10px;">↓ Download Template</button>
+            <button class="btn-action btn-add" style="background:#15803d; margin:0;">Export Database</button>
+        </div>
+    </div>
+
+    <div class="excel-container">
+        <table>
+            <thead>
+                <tr>
+                    <th rowspan="2" width="100">GROUP</th>
+                    <th rowspan="2" width="100">KODE KPI</th>
+                    <th rowspan="2" width="120">DEPT</th>
+                    <th rowspan="2" width="120">SUB DEPT</th>
+                    <th rowspan="2" width="200">ITEM KPI</th>
+                    <th rowspan="2" width="60">UoM</th>
+                    <th rowspan="2" width="80">Polarity (+/-)</th>
+                    <th rowspan="2" width="180">Function<br>(Sum/Avg/last up to)</th>
+                    <th rowspan="2" width="60">Weight</th>
+                    <th rowspan="2" width="100">PIC DATA</th>
+                    <th rowspan="2" width="120">Baseline LAST YEAR YTD</th>
+                    <th rowspan="2" width="120">Baseline LAST YEAR MTD</th>
+                    
+                    <th colspan="12" style="background: #e0f2fe; color: #0369a1; border-bottom: 1px solid #bae6fd;">PLAN</th>
+                    
+                    <th colspan="12" style="background: #dcfce7; color: #166534; border-bottom: 1px solid #bbf7d0;">ACTUAL</th>
+                    
+                    <th rowspan="2" width="80">Median</th>
+                    <th rowspan="2" width="80">Ach</th>
+                    <th rowspan="2" width="80">SCORE</th>
+                    <th rowspan="2" width="250">Deskripsi</th>
+                </tr>
+                <tr>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Jan</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Feb</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Mar</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Apr</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">May</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Jun</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Jul</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Aug</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Sep</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Oct</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Nov</th>
+                    <th style="background: #e0f2fe; color: #0369a1; width: 60px;">Dec</th>
+                    
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Jan</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Feb</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Mar</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Apr</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">May</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Jun</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Jul</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Aug</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Sep</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Oct</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Nov</th>
+                    <th style="background: #dcfce7; color: #166534; width: 60px;">Dec</th>
+                </tr>
+            </thead>
+            <tbody id="kpiBody">
+                <tr>
+                    <td><input type="text" class="cell-input" placeholder="Group..."></td>
+                    <td><input type="text" class="cell-input" placeholder="Kode..."></td>
+                    <td><input type="text" class="cell-input" placeholder="Dept..."></td>
+                    <td><input type="text" class="cell-input" placeholder="Sub Dept..."></td>
+                    <td><input type="text" class="cell-input" placeholder="Item KPI..."></td>
+                    <td><input type="text" class="cell-input" placeholder="UoM..."></td>
+                    <td><select class="cell-input"><option>+</option><option>-</option></select></td>
+                    <td>
+                        <select class="cell-input">
+                            <option>Sum</option>
+                            <option>Avg</option>
+                            <option>Last up to</option>
+                        </select>
+                    </td>
+                    <td><input type="number" class="cell-input" placeholder="0"></td>
+                    <td><input type="text" class="cell-input" placeholder="PIC..."></td>
+                    <td><input type="number" class="cell-input" placeholder="0"></td>
+                    <td><input type="number" class="cell-input" placeholder="0"></td>
+                    
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+                    <td><input type="number" class="cell-input"></td>
+
+                    <td><input type="number" class="cell-input cell-readonly" readonly placeholder="0"></td>
+                    <td><input type="number" class="cell-input cell-readonly" readonly placeholder="0%"></td>
+                    <td><input type="number" class="cell-input cell-readonly" readonly placeholder="0"></td>
+                    <td><input type="text" class="cell-input" placeholder="Deskripsi..."></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>
